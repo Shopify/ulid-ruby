@@ -7,6 +7,7 @@ require "spec_helper"
 KNOWN_STRING = "01ARYZ6RR0T8CNRGXPSBZSA1PY"
 KNOWN_TIME = Time.parse("2016-07-30 22:36:16 UTC")
 KNOWN_UUID = "01563df3-6300-d219-5c43-b6caff9506de"
+KNOWN_HEX = "01563df36300d2195c43b6caff9506de"
 KNOWN_BYTES = "\x01V=\xF3c\x00\xD2\x19\\C\xB6\xCA\xFF\x95\x06\xDE".b
 KNOWN_UINT128 = 1777022035688232904178850488005232350
 
@@ -85,6 +86,13 @@ describe ULID do
     it 'generates a valid UUID' do
       ulid = ULID.new KNOWN_STRING
       expect(ulid.to_uuid).to eq(KNOWN_UUID)
+    end
+  end
+
+  describe '.to_hex' do
+    it 'generates a valid hex string' do
+      ulid = ULID.new KNOWN_STRING
+      expect(ulid.to_hex).to eq(KNOWN_HEX)
     end
   end
 
@@ -197,6 +205,38 @@ describe ULID do
       it 'supports UUID self generated' do
         first = ULID.new
         other = ULID.new first.to_uuid
+
+        expect(other.ulid).to eq(first.ulid)
+        expect(other.seed).to eq(first.seed)
+        expect(other.bytes).to eq(first.bytes)
+        expect(other.time).to be_within(0.001).of(first.time)
+      end
+    end
+
+    context 'with hex string arg' do
+      it 'supports hex' do
+        first = ULID.new KNOWN_HEX
+        other = ULID.new KNOWN_STRING
+
+        expect(other.ulid).to eq(first.ulid)
+        expect(other.seed).to eq(first.seed)
+        expect(other.bytes).to eq(first.bytes)
+        expect(other.time).to eq(first.time)
+      end
+
+      it 'supports hex case insensitive' do
+        first = ULID.new KNOWN_HEX.downcase
+        other = ULID.new KNOWN_HEX.upcase
+
+        expect(other.ulid).to eq(first.ulid)
+        expect(other.seed).to eq(first.seed)
+        expect(other.bytes).to eq(first.bytes)
+        expect(other.time).to eq(first.time)
+      end
+
+      it 'supports UUID self generated' do
+        first = ULID.new
+        other = ULID.new first.to_hex
 
         expect(other.ulid).to eq(first.ulid)
         expect(other.seed).to eq(first.seed)

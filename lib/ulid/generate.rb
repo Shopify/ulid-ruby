@@ -35,6 +35,10 @@ module ULID
       (hi << 64) | lo
     end
 
+    def encode_hex
+      self.bytes.unpack1('H*')
+    end
+
     def random_bytes
       SecureRandom.random_bytes(10)
     end

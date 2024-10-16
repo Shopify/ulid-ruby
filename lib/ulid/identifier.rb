@@ -43,11 +43,14 @@ module ULID
           # parse ULID string into bytes
           @ulid = start.upcase
           @bytes = decode32(@ulid)
+        when 32
+          # parse hex string into bytes
+          @bytes = decode_hex(start)
         when 36
           # parse UUID string into bytes
           @bytes = decode16(start)
         else
-          raise ArgumentError.new("invalid ULID or UUID string - must be 16, 26, or 36 characters")
+          raise ArgumentError.new("invalid ULID or UUID string - must be 16, 26, 32, or 36 characters")
         end
 
         raise ArgumentError.new("invalid ULID or UUID") if @bytes.size != 16
@@ -90,6 +93,10 @@ module ULID
 
     def to_i
       @int128 ||= encode10
+    end
+
+    def to_hex
+      @hex ||= encode_hex
     end
 
     def to_a
