@@ -21,6 +21,10 @@ module ULID
       [input >> 64, input & 0xFFFFFFFFFFFFFFFF].pack("Q>Q>")
     end
 
+    def decode_hex(input)
+      [input].pack("H*")
+    end
+
     def unpack_ulid_bytes(packed_bytes)
       time_int = ("\x00\x00#{packed_bytes}").unpack1("Q>")
       seed = packed_bytes[6..-1]
