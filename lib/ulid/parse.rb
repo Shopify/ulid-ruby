@@ -14,11 +14,15 @@ module ULID
     end
 
     def decode16(input)
-      [input.delete("-")].pack("H*")
+      [input].pack("H*")
     end
 
     def decode10(input)
       [input >> 64, input & 0xFFFFFFFFFFFFFFFF].pack("Q>Q>")
+    end
+
+    def decode_uuid(input)
+      [input.delete("-")].pack("H*")
     end
 
     def unpack_ulid_bytes(packed_bytes)
