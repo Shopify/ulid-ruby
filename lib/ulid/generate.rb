@@ -25,14 +25,18 @@ module ULID
       b32
     end
 
-    # returns the binary uint128 in base16 UUID format
     def encode16
-      self.bytes.unpack("H8H4H4H4H*").join("-")
+      self.bytes.unpack1('H*')
     end
 
     def encode10
       (hi, lo) = self.bytes.unpack('Q>Q>')
       (hi << 64) | lo
+    end
+
+    # returns the binary uint128 in base16 UUID format
+    def encode_uuid
+      self.bytes.unpack("H8H4H4H4H*").join("-")
     end
 
     def random_bytes
