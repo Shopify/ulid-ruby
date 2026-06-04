@@ -64,6 +64,10 @@ describe ULID do
       expect(ulid_string).to be_instance_of(String)
     end
 
+    it 'generates the minimum ULID at the Unix epoch' do
+      expect(ULID.min_ulid_at(Time.at(0))).to eq("00000000000000000000000000")
+    end
+
     it 'generates the lowest lexicographical ULID' do
       expect(ulid_string).to match(/0000000000000000$/)
     end
@@ -264,6 +268,10 @@ describe ULID do
         expect(other.seed).to eq(first.seed)
         expect(other.bytes).to eq(first.bytes)
         expect(other.time).to eq(first.time)
+      end
+
+      it 'pads the lowest possible encoded value to 26 characters' do
+        expect(ULID.new(0).ulid).to eq("00000000000000000000000000")
       end
     end
 

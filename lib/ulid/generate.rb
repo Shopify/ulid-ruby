@@ -19,10 +19,7 @@ module ULID
       b32 = value.to_s(32)
       b32.tr!(B32_RCF4648_FRAGMENT, B32_CROCKFORD_FRAGMENT)
       b32.upcase!
-
-      return "0#{b32}" if b32.length == 25
-
-      b32
+      b32.rjust(26, "0")
     end
 
     def encode16
